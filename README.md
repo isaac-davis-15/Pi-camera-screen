@@ -17,4 +17,4 @@
       <li>Restart Slideshow</li>
     </ol>
 </ul>
-<footer><center>This code was made by Isaac Davis from robotics team 2903(FIRST Steamworks), it is Open Soruce and can be used and edited by anyone</center></footer>
+<footer style="font-size: .5md"><center>This code was made by Isaac Davis from robotics team 2903(FIRST Steamworks), it is Open Soruce and can be used and edited by anyone</center></footer>
