@@ -20,6 +20,8 @@ def take_pic():
     count_down--
     time.sleep(1)
   camera.annotate_background = "white"
-  camera.capture('image_' + count + ".jpg");
+  time.sleep(.135)
+  camera.capture('image_' + count + ".jpg")
   count++
+  time.sleep(.135)
   return
