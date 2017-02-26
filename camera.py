@@ -7,6 +7,7 @@ from random import randint
 import RPi.GPIO as GPIO
 
 camera = picamera.PiCamera()
+camera.image_effect = "film"
 
 GPIO.setmode(GPIO.BCM)
 
@@ -34,11 +35,14 @@ def take_pic():
   time.sleep(.135)
   
   #create a shudder effect
-  shutter_img = Image.open("shutter_img")
-  shutter_img.show();
+  camera.brightness = 100
+  time.sleep(.5)
+  
+  #take the photo and some of shutter effect
   camera.capture('images/image_' + count + ".jpg")
   count++
   time.sleep(.135)
+  camera.brightness = 50
   
   #end the prosses handling the image being shown
   for proc in psutil.process_iter():
