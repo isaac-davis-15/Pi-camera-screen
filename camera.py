@@ -1,27 +1,40 @@
-from import picamera, Color 
+import picamera 
 import os.path as path
-import Image 
+import os
+from PIL import Image 
 import time
-import psutil
 from random import randint
-import RPi.GPIO as GPIO
+import RPi.GPIO as gpio
+import datetime as date
 
 camera = picamera.PiCamera()
 camera.image_effect = "film"
 
-GPIO.setmode(GPIO.BCM)
+os.putenv("SDL_FBDEV", "/dev/fb0")
+
+gpio.setmode(gpio.BCM)
 
 count = 0
 
+off_pin = "define me"
+
+todays_date = date.date.today()
+
 def init():
-  #get the number of photos and store it in a var
-  while path.isfile("images/image_" + count + ".jpg")
-    count++
-  #set the pin mode of a GPIO pin  
-  gpio.setup(17, GPIO.IN)
-    return
-    
+  #set the pin mode of GPIO pins 
+  gpio.setup(17, gpio.IN)
+  gpio.setup()
+return
+
+def check_off():
+  if gpio.input(off_pin):
+    os.system("sudo shutdown")
+return
+
+
 def take_pic():
+  global count  
+
   #start the preview
   camera.start_preview();
   
@@ -30,36 +43,35 @@ def take_pic():
   camera.annotate_background = Color("White")
   for x in range(0, 5):
     camera.annotate_text = count_down
-    count_down--
+    count_down -= 1
     time.sleep(1)
   time.sleep(.135)
   
   #create a shudder effect
   camera.brightness = 100
+  camera.stop_preview()
   time.sleep(.5)
   
   #take the photo and some of shutter effect
-  camera.capture('images/image_' + count + ".jpg")
-  count++
+  camera.capture('./images/' + todays_date + "_" + date. + ".jpg")
+  count += 1
   time.sleep(.135)
   camera.brightness = 50
   
-  #end the prosses handling the image being shown
-  for proc in psutil.process_iter():
-    if proc.name() == "display":
-        proc.kill()
-  return
+  #show the pic that was just taken
+  
 
 def slideshow():
-  rand_num = randint(0, counter)
-  current_img = Image.open("image_" + rand_num + ".jpg")
-  current_img.show()
+  
   return 
 
 init()
-while true:
-  if gpio.input(17)
+current_img = None
+while 1 == 1:
+  if gpio.input(17):
     take_pic()
   else:
     slideshow()
     time.sleep(5)
+    current_img.close()
+  check_off()
