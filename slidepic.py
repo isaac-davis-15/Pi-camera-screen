@@ -10,6 +10,10 @@ import signal
 #init the camera
 camera = picamera.PiCamera()
 
+image_filter = "washedout"
+
+button_input = 1
+
 #set up the GPIO
 gpio.setmode(gpio.BCM)
 gpio.setup(17, gpio.IN, pull_up_down = gpio.PUD_UP)
@@ -30,21 +34,36 @@ image_name += 1
 
 print(image_name)
 
+def filter(channel):
+    global button_input
+
+    if button_input == 1:
+	button_input = 0
+	take_pic()
+    else:
+	print("Nope!")
+
 def slideshow():
-    global slides    
+    global slides 
+    global button_input   
+    
+    button_input = 1
+    slides = subprocess.Popen("fbi -noverbose -d /dev/fb0 -t 4 -u /home/pi/Pi-camera-screen/images/*.jpg", shell=True, preexec_fn=os.setsid)
 
-    slides = subprocess.Popen("fbi -noverbose -d /dev/fb0 -t 4  /home/pi/Pi-camera-screen/images/*.jpg", shell=True, preexec_fn=os.setsid)
-
-def take_pic(channel):
+def take_pic():
+    global image_filter
     global camera
     global slides
     global image_name
+    global button_input
 
     if slides is not None:
     	os.killpg(os.getpgid(slides.pid), signal.SIGTERM)
 
     camera.start_preview()
     count_down = 5
+    camera.annotate_text_size = 100
+    camera.image_effect = image_filter
     for x in range(0, 5):
         camera.annotate_text = str(count_down)
         time.sleep(1)
@@ -62,12 +81,13 @@ def take_pic(channel):
     os.killpg(os.getpgid(taken_image.pid), signal.SIGTERM)
     slideshow()
 
-gpio.add_event_detect(17, gpio.FALLING, callback = take_pic, bouncetime = 30000)
+#gpio.add_event_detect(17, gpio.FALLING, callback = filter, bouncetime = 200)
 
 slideshow()
 
 while 1:
-    time.sleep(.1)
+    if not gpio.input(17):
+	take_pic()
     
 
 	
