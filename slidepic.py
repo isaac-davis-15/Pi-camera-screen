@@ -63,7 +63,7 @@ def take_pic():
     camera.start_preview()
     count_down = 5
     camera.annotate_text_size = 100
-    camera.image_effect = image_filter
+    #camera.image_effect = image_filter
     for x in range(0, 5):
         camera.annotate_text = str(count_down)
         time.sleep(1)
