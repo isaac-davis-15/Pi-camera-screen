@@ -60,6 +60,16 @@ def take_pic():
     if slides is not None:
     	os.killpg(os.getpgid(slides.pid), signal.SIGTERM)
 
+    time.sleep(.5)
+
+    prompt = subprocess.Popen("fbi -noverbose -d /dev/fb0 -a /home/pi/Pi-camera-screen/instruct.jpg", shell=True, preexec_fn=os.setsid)
+
+    while 1:
+	if not gpio.input(17):
+	   break
+    
+    os.killpg(os.getpgid(prompt.pid), signal.SIGTERM)
+
     camera.start_preview()
     count_down = 5
     camera.annotate_text_size = 100
