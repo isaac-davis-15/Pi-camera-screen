@@ -1,4 +1,4 @@
-# Pi-camera-screen(Unfinished)
+# Pi-camera-screen
 
 <ul>
   <li><h2>Description</h2></li>
